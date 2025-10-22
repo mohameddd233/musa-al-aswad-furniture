@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Contact - Musa Al-Aswad Furniture</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<header>
+  <div class="header-inner container">
+    <div class="logo"><img src="images/logo.jpg" alt="logo"></div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Store</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="container contact-page">
+  <h1>Contact Us</h1>
+
+  <div class="contact-wrapper">
+    <!-- 📩 Contact Form -->
+    <section class="contact-form">
+      <h2>Send us a Message</h2>
+      <form onsubmit="sendMessage(event)">
+        <input id="name" placeholder="Your Name" required>
+        <input id="email" type="email" placeholder="Your Email" required>
+        <textarea id="msg" rows="5" placeholder="Your Message" required></textarea>
+        <button class="btn" type="submit">Send Message</button>
+      </form>
+    </section>
+
+    <!-- 📞 Contact Info -->
+    <section class="contact-info">
+      <h2>Get in Touch</h2>
+      <p><strong>Phone / WhatsApp:</strong> <a href="tel:01276231298">012 7623 1298</a></p>
+      <p><strong>Email:</strong> <a href="mailto:msamaan753@gmail.com">msamaan753@gmail.com</a></p>
+      <p><strong>Address:</strong> شارع ١٥ من شارع ٤٥ يمين، العصافرة، أمام أبو حسن للمواد التموينية</p>
+
+      <div class="social-links">
+        <a href="https://www.facebook.com/share/1AgKJDZVhc/?mibextid=wwXIfr" target="_blank">Facebook</a>
+        <a href="https://www.instagram.com/musa_alaswad_furniture_?igsh=MTFrZGx3M3ZrcnBjbw==" target="_blank">Instagram</a>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="footer-line">
+  © 2025 MUSA AL-ASWAD FURNITURE – Designed & Developed by Mohamed Ali
+</div>
+
+<script>
+function sendMessage(e){
+  e.preventDefault();
+  alert('Message sent (demo). You can reach us directly on WhatsApp: 01276231298');
+  document.getElementById('name').value='';
+  document.getElementById('email').value='';
+  document.getElementById('msg').value='';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin - Musa Al-Aswad Furniture</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* Extra admin specific styles */
+.login-wrap{max-width:420px;margin:60px auto;padding:28px;background:#fff;border-radius:12px;box-shadow:0 12px 30px rgba(10,10,10,.08)}
+.login-wrap h2{text-align:center;margin-bottom:12px}
+.form-row{margin-bottom:12px}
+.form-row input{width:100%;padding:12px;border-radius:8px;border:1px solid #e6e6e6}
+.admin-dashboard{max-width:1100px;margin:24px auto;padding:18px;background:#fff;border-radius:12px;box-shadow:0 12px 30px rgba(10,10,10,.06)}
+.header-tools{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.tools-left{display:flex;gap:10px;align-items:center}
+.small{font-size:13px;color:#666}
+.product-row{display:flex;gap:12px;align-items:center;background:#fafafa;padding:10px;border-radius:10px;margin-bottom:10px}
+.product-row img{width:90px;height:66px;object-fit:cover;border-radius:6px}
+.flex-1{flex:1}
+.controls{display:flex;flex-direction:column;gap:8px}
+.row{display:flex;gap:10px;align-items:center}
+.setpw{margin-top:12px;background:#fff;padding:12px;border-radius:8px;border:1px solid #eee}
+@media(max-width:800px){ .product-row{flex-direction:column;align-items:flex-start} .header-tools{flex-direction:column;align-items:flex-start} }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <img src="images/logo.jpg" alt="Musa Al-Aswad Furniture Logo">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Store</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="admin.html">Admin</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Login Screen -->
+<div id="loginScreen" class="login-wrap container" style="display:none">
+  <h2>Admin Login</h2>
+  <p class="small">Enter admin password to access the management panel.</p>
+  <div class="form-row"><input id="loginPw" type="password" placeholder="Password"></div>
+  <div class="form-row"><button id="loginBtn" class="btn">Login</button></div>
+  <p style="text-align:center;margin-top:8px"><a href="#" id="recoverBtn" class="small">Reset admin password</a></p>
+</div>
+
+<!-- Admin Dashboard -->
+<div id="dashboard" style="display:none" class="admin-dashboard container">
+  <div class="header-tools">
+    <div class="tools-left">
+      <h2>Admin Panel</h2>
+      <div class="small">Manage products — changes saved in browser (localStorage)</div>
+    </div>
+    <div class="tools-right row">
+      <button id="logoutBtn" class="btn alt">Logout</button>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 360px;gap:18px">
+    <div>
+      <h3>Products</h3>
+      <div id="list"></div>
+    </div>
+
+    <div>
+      <div style="background:#fff;padding:14px;border-radius:10px;box-shadow:0 8px 18px rgba(10,10,10,.04)">
+        <h3 id="formTitle">Add New Product</h3>
+        <form id="prodForm">
+          <input id="pid" type="hidden">
+          <div class="form-row"><input id="title" placeholder="Product Title" required></div>
+          <div class="form-row"><input id="price" type="number" placeholder="Price (EGP)" required></div>
+          <div class="form-row"><input id="img" placeholder="Image path (e.g. images/product1.jpg)" required></div>
+          <div class="form-row"><input id="qty" type="number" placeholder="Quantity" value="1" required></div>
+          <div class="form-row"><textarea id="desc" rows="4" placeholder="Description" required></textarea></div>
+          <div style="display:flex;gap:8px"><button class="btn" type="submit">Save</button><button id="clearForm" type="button" class="btn alt">Clear</button></div>
+        </form>
+
+        <div class="setpw">
+          <h4>Admin Settings</h4>
+          <p class="small">Change the admin password (stored locally).</p>
+          <div class="form-row"><input id="oldPw" type="password" placeholder="Current password"></div>
+          <div class="form-row"><input id="newPw" type="password" placeholder="New password"></div>
+          <div class="form-row"><button id="changePwBtn" class="btn">Change Password</button></div>
+          <p class="small" style="margin-top:8px">Default password on first load is <strong>12345</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+      <div class="footer-line">
+        © 2025 MUSA AL-ASWAD FURNITURE – Designed & Developed by Mohamed Ali
+      </div>
+    </div>
+
+<script>
+/* Admin with login + changeable password (stored in localStorage). 
+   WARNING: This is for demo only — localStorage is not secure for production credentials.
+*/
+
+// defaults
+const DEFAULT_PW = '12345';
+const PW_KEY = 'musa_admin_pw';
+
+function getAdminPw(){ return localStorage.getItem(PW_KEY) || DEFAULT_PW; }
+function setAdminPw(v){ localStorage.setItem(PW_KEY, v); }
+
+// initial setup - ensure default products exist
+const defaultProducts = [
+  {id:1,title:'Elegant Sofa',price:2500,desc:'High-quality comfortable sofa.',img:'images/product1.jpg',qty:5},
+  {id:2,title:'Modern Curtains',price:900,desc:'Stylish curtains for living room.',img:'images/product2.jpg',qty:10},
+  {id:3,title:'Wooden Chair',price:450,desc:'Durable and elegant wooden chair.',img:'images/product3.jpg',qty:7}
+];
+function getProducts(){ let p = localStorage.getItem('musa_products'); if(!p){ localStorage.setItem('musa_products', JSON.stringify(defaultProducts)); return defaultProducts; } return JSON.parse(p); }
+function saveProducts(arr){ localStorage.setItem('musa_products', JSON.stringify(arr)); renderList(); }
+
+// render product list
+function renderList(){
+  const list = document.getElementById('list'); const prods = getProducts();
+  list.innerHTML=''; prods.forEach(p=>{
+    const div = document.createElement('div'); div.className='product-row';
+    div.innerHTML = `<img src="${p.img}" alt=""><div class="flex-1"><strong>${p.title}</strong><div class="small">EGP ${p.price} • Qty: ${p.qty}</div><div style="margin-top:6px">${p.desc}</div></div><div class="controls"><button class="btn" onclick="edit(${p.id})">Edit</button><button class="btn alt" onclick="remove(${p.id})">Delete</button></div>`;
+    list.appendChild(div);
+  });
+}
+
+// form handling
+document.getElementById('prodForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const id = document.getElementById('pid').value ? parseInt(document.getElementById('pid').value) : Date.now();
+  const prod = {
+    id: id,
+    title: document.getElementById('title').value,
+    price: parseFloat(document.getElementById('price').value),
+    img: document.getElementById('img').value,
+    qty: parseInt(document.getElementById('qty').value),
+    desc: document.getElementById('desc').value
+  };
+  const arr = getProducts().filter(x=>x.id!==prod.id);
+  arr.unshift(prod);
+  saveProducts(arr);
+  this.reset(); document.getElementById('pid').value=''; document.getElementById('formTitle').textContent='Add New Product';
+});
+
+document.getElementById('clearForm').addEventListener('click', function(){ document.getElementById('prodForm').reset(); document.getElementById('pid').value=''; document.getElementById('formTitle').textContent='Add New Product'; });
+
+// edit/delete functions exposed
+function edit(id){ const p = getProducts().find(x=>x.id===id); document.getElementById('pid').value=p.id; document.getElementById('title').value=p.title; document.getElementById('price').value=p.price; document.getElementById('img').value=p.img; document.getElementById('qty').value=p.qty; document.getElementById('desc').value=p.desc; document.getElementById('formTitle').textContent='Edit Product'; window.scrollTo({top:0,behavior:'smooth'}); }
+function remove(id){ if(!confirm('Delete this product?')) return; const arr = getProducts().filter(x=>x.id!==id); saveProducts(arr); }
+
+// login flow
+function showLogin(){ document.getElementById('loginScreen').style.display='block'; document.getElementById('dashboard').style.display='none'; }
+function showDashboard(){ document.getElementById('loginScreen').style.display='none'; document.getElementById('dashboard').style.display='block'; renderList(); }
+
+document.getElementById('loginBtn').addEventListener('click', function(){
+  const v = document.getElementById('loginPw').value;
+  if(!v){ alert('Enter password'); return; }
+  if(v === getAdminPw()){ sessionStorage.setItem('musa_is_admin','1'); showDashboard(); } else { alert('Wrong password'); }
+});
+
+document.getElementById('logoutBtn').addEventListener('click', function(){ sessionStorage.removeItem('musa_is_admin'); showLogin(); });
+
+// change password
+document.getElementById('changePwBtn').addEventListener('click', function(){
+  const oldv = document.getElementById('oldPw').value;
+  const newv = document.getElementById('newPw').value;
+  if(!oldv || !newv){ alert('Fill both fields'); return; }
+  if(oldv !== getAdminPw()){ alert('Current password is incorrect'); return; }
+  setAdminPw(newv);
+  document.getElementById('oldPw').value=''; document.getElementById('newPw').value='';
+  alert('Password changed');
+});
+
+// reset password link (clears custom and restores default)
+document.getElementById('recoverBtn').addEventListener('click', function(e){
+  e.preventDefault();
+  if(!confirm('Reset admin password to default?')) return;
+  localStorage.removeItem(PW_KEY);
+  alert('Admin password reset to default: ' + DEFAULT_PW);
+});
+
+// on load - check session
+document.addEventListener('DOMContentLoaded', function(){
+  const isAdmin = sessionStorage.getItem('musa_is_admin');
+  if(isAdmin === '1'){ showDashboard(); } else { showLogin(); }
+});
+</script>
+</body>
+</html>

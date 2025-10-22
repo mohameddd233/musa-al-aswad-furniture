@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Product - Musa Al-Aswad Furniture</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: "Cairo", sans-serif;
+      margin: 0;
+      background: #faf8f5;
+      color: #333;
+    }
+
+    header {
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+    }
+
+    .logo img {
+      width: 120px;
+      border-radius: 8px;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      gap: 20px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #444;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #b68d40;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    #productContainer img {
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      color: #222;
+      margin-bottom: 10px;
+    }
+
+    p.price {
+      font-size: 1.2rem;
+      color: #b68d40;
+      font-weight: bold;
+    }
+
+    input[type="number"] {
+      width: 100px;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      margin-top: 5px;
+    }
+
+    .btn {
+      background: #b68d40;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background: #9a772f;
+    }
+
+    .cart-bar {
+      display: inline-block;
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #b68d40;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: background 0.3s;
+    }
+
+    .cart-bar:hover {
+      background: #9a772f;
+    }
+
+    .footer-line {
+      background: #222;
+      color: #ccc;
+      text-align: center;
+      padding: 15px;
+      margin-top: 50px;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 768px) {
+      #productContainer > div {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="header-inner container">
+      <div class="logo">
+        <img src="images/logo.jpg" alt="logo">
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="products.html">Store</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container" id="productContainer"></div>
+
+  <a class="cart-bar" href="cart.html" id="cartBtn">Cart (<span id="cart-count">0</span>)</a>
+
+  <div class="footer-line">
+    © 2025 MUSA AL-ASWAD FURNITURE – Designed & Developed by Mohamed Ali
+  </div>
+
+  <script>
+    function getQuery(name) {
+      const url = new URL(location.href);
+      return parseInt(url.searchParams.get(name));
+    }
+
+    function getProducts() {
+      return JSON.parse(localStorage.getItem('musa_products') || '[]');
+    }
+
+    function render() {
+      const id = getQuery('id');
+      const prods = getProducts();
+      const p = prods.find(x => x.id === id);
+      const cont = document.getElementById('productContainer');
+
+      if (!p) {
+        cont.innerHTML = '<p>Product not found.</p>';
+        return;
+      }
+
+      cont.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;">
+          <div>
+            <img src="${p.img}" alt="${p.title}">
+          </div>
+          <div>
+            <h2>${p.title}</h2>
+            <p>${p.desc}</p>
+            <p class="price">EGP ${p.price}</p>
+            <label>Quantity:</label>
+            <input type="number" id="q" min="1" value="1">
+            <div style="margin-top:15px;">
+              <button class="btn" onclick="addToCart(${p.id})">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      updateCartCount();
+    }
+
+    function addToCart(id) {
+      const qty = parseInt(document.getElementById('q').value) || 1;
+      let cart = JSON.parse(localStorage.getItem('musa_cart') || '[]');
+      const prods = JSON.parse(localStorage.getItem('musa_products') || '[]');
+      const prod = prods.find(p => p.id === id);
+      if (!prod) {
+        alert('Product not found');
+        return;
+      }
+      const existing = cart.find(i => i.id === id);
+      if (existing) {
+        existing.qty += qty;
+      } else {
+        cart.push({ id: id, qty: qty, title: prod.title, price: prod.price });
+      }
+      localStorage.setItem('musa_cart', JSON.stringify(cart));
+      alert('Added to cart');
+      updateCartCount();
+    }
+
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('musa_cart') || '[]');
+      document.getElementById('cart-count').textContent = cart.reduce((s, i) => s + i.qty, 0);
+    }
+
+    document.addEventListener('DOMContentLoaded', render);
+  </script>
+</body>
+</html>

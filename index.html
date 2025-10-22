@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Musa Al-Aswad Furniture</title>
+  <meta name="description" content="Musa Al-Aswad Furniture — Elegant furniture and modern curtains for homes and offices.">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <img src="images/logo.jpg" alt="Musa Al-Aswad Furniture Logo">
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="products.html">Store</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="admin.html">Admin</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero">
+    <div class="inner container">
+      <h1>Musa Al-Aswad Furniture</h1>
+      <p>Elegant furniture & modern curtains — quality & comfort for every home.</p>
+      <p style="margin-top:16px">
+        <a class="btn" href="products.html">Shop Now</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== FEATURED PRODUCTS ===== -->
+  <main class="container">
+    <h2 style="padding:40px 0 10px 0;text-align:center;font-size:28px;color:#b68c50;">Featured Products</h2>
+
+    <section class="products-grid" id="featured">
+      <!-- Cards loaded by script -->
+    </section>
+
+    <a class="cart-bar" href="products.html" id="cartBtn">
+      🛒 Cart (<span id="cart-count">0</span>)
+    </a>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="footer-line">
+    © 2025 MUSA AL-ASWAD FURNITURE – Designed & Developed by Mohamed Ali
+  </div>
+
+  <!-- ===== SCRIPT ===== -->
+  <script>
+  // default product list (used if localStorage is empty)
+  const defaultProducts = [
+    {id:1, title:'Elegant Sofa', price:2500, desc:'High-quality comfortable sofa.', img:'images/product1.jpg', qty:5},
+    {id:2, title:'Modern Curtains', price:900, desc:'Stylish curtains for living room.', img:'images/product2.jpg', qty:10},
+    {id:3, title:'Wooden Chair', price:450, desc:'Durable and elegant wooden chair.', img:'images/product3.jpg', qty:7}
+  ];
+
+  // Get or initialize products
+  function getProducts() {
+    let p = localStorage.getItem('musa_products');
+    if (!p) {
+      localStorage.setItem('musa_products', JSON.stringify(defaultProducts));
+      return defaultProducts;
+    }
+    return JSON.parse(p);
+  }
+
+  // Render the first 3 products
+  function renderFeatured() {
+    const grid = document.getElementById('featured');
+    const products = getProducts();
+    grid.innerHTML = '';
+    products.slice(0,3).forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="${p.img}" alt="${p.title}">
+        <div class="body">
+          <h3>${p.title}</h3>
+          <p>${p.desc}</p>
+          <div class="price">EGP ${p.price}</div>
+          <a href="product.html?id=${p.id}" class="btn">View</a>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  // Update cart number
+  function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('musa_cart') || '[]');
+    document.getElementById('cart-count').textContent = cart.reduce((s, i) => s + i.qty, 0);
+  }
+
+  renderFeatured();
+  updateCartCount();
+  </script>
+
+</body>
+</html>
