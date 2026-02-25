@@ -95,7 +95,7 @@
             box-shadow: 0 0 0 3px rgba(198, 164, 63, 0.15);
         }
         
-        /* قسم رفع الصور - جديد */
+        /* قسم رفع الصور */
         .image-upload-section {
             background: #ffffff;
             border: 2px dashed #C6A43F;
@@ -526,7 +526,8 @@
                 </button>
             </div>
 
- 
+            <!-- إحصائيات سريعة -->
+            <div class="admin-stats" id="adminStats"></div>
 
             <!-- شريط البحث -->
             <div class="search-box">
@@ -566,7 +567,7 @@
                             <input id="price" type="number" placeholder="مثال: 2500" required min="1">
                         </div>
                         
-                        <!-- قسم رفع الصور - الجديد كلياً -->
+                        <!-- قسم رفع الصور -->
                         <div class="form-row">
                             <label>🖼️ صورة المنتج</label>
                             
@@ -655,6 +656,23 @@
         
         // مصفوفة لتخزين الصور المرفوعة
         let uploadedImages = [];
+        
+        // ========== دوال localStorage الأساسية ==========
+        // دالة جلب المنتجات من localStorage
+        function getProducts() {
+            const products = localStorage.getItem('musa_products');
+            if (products) {
+                return JSON.parse(products);
+            }
+            
+            // إذا مفيش منتجات، نرجع مصفوفة فاضية
+            return [];
+        }
+
+        // دالة حفظ المنتجات في localStorage
+        function saveProducts(products) {
+            localStorage.setItem('musa_products', JSON.stringify(products));
+        }
         
         // ========== تسجيل الدخول ==========
         function showLogin() { 
