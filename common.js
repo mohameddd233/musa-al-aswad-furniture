@@ -173,7 +173,7 @@ function loadHeader() {
                         <ul>
                             <li><a href="index.html" class="${window.location.pathname.endsWith('index.html') || window.location.pathname === '/' ? 'active' : ''}">الرئيسية</a></li>
                             <li><a href="products.html" class="${window.location.pathname.includes('products') ? 'active' : ''}">المتجر</a></li>
-                            <li><a href="gallery.html" class="${window.location.pathname.includes('gallery') ? 'active' : ''}">معرض الصور</a></li>
+                        
                             <li><a href="about.html" class="${window.location.pathname.includes('about') ? 'active' : ''}">من نحن</a></li>
                             <li><a href="contact.html" class="${window.location.pathname.includes('contact') ? 'active' : ''}">اتصل بنا</a></li>
                             <li><a href="cart.html" class="${window.location.pathname.includes('cart') ? 'active' : ''}">
