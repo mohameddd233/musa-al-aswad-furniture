@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>موسى الأسود للأثاث - الرئيسية</title>
+    <meta name="description" content="موسى الأسود للأثاث - أثاث أنيق وستائر عصرية للمنازل والمكاتب">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/hero-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+            text-align: center;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 40px;
+            color: #C6A43F;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- مكان إدراج الهيدر -->
+    <div id="header-placeholder"></div>
+
+    <!-- قسم الهيرو -->
+    <section class="hero">
+        <div class="container">
+            <h1>موسى الأسود للأثاث</h1>
+            <p>أثاث أنيق وستائر عصرية - جودة وراحة لكل منزل</p>
+            <a href="products.html" class="btn" style="font-size: 18px; padding: 15px 40px;">تسوق الآن</a>
+        </div>
+    </section>
+
+    <!-- المميزات -->
+    <div class="container">
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <h3>جودة عالية</h3>
+                <p>نستخدم أفضل الخامات لضمان المتانة والراحة</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚚</div>
+                <h3>توصيل مجاني</h3>
+                <p>توصيل سريع وآمن لجميع المحافظات</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💎</div>
+                <h3>تصاميم عصرية</h3>
+                <p>أحدث الصيحات في عالم الأثاث والديكور</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <h3>خدمة ما بعد البيع</h3>
+                <p>دعم فني وضمان على جميع المنتجات</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- المنتجات المميزة -->
+    <main class="container">
+        <h2 style="text-align: center; font-size: 32px; color: #1E1E1E; margin: 40px 0 20px;">
+            منتجات مميزة
+        </h2>
+        <p style="text-align: center; color: #666; margin-bottom: 40px;">
+            اكتشف مجموعتنا المختارة من أفضل المنتجات
+        </p>
+        <section class="products-grid" id="featured"></section>
+        
+        <div style="text-align: center; margin: 50px 0;">
+            <a href="products.html" class="btn alt" style="font-size: 16px; padding: 12px 30px;">
+                عرض جميع المنتجات ←
+            </a>
+        </div>
+    </main>
+
+    <!-- شريط السلة العائم -->
+    <a href="cart.html" class="cart-bar" id="cartBtn">
+        🛒 السلة (<span class="cart-count">0</span>)
+    </a>
+
+    <!-- الفوتر -->
+    <div class="footer-line">
+        © 2025 MUSA AL-ASWAD FURNITURE – تصميم وبرمجة محمد علي
+    </div>
+
+    <script src="common.js"></script>
+    <script>
+        function renderFeatured() {
+            const grid = document.getElementById('featured');
+            const products = getProducts();
+            
+            if (products.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1;">لا توجد منتجات متاحة</p>';
+                return;
+            }
+            
+            grid.innerHTML = '';
+            products.slice(0, 4).forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${p.img}" alt="${p.title}" onerror="this.src='images/placeholder.jpg'">
+                    <div class="body">
+                        <h3>${p.title}</h3>
+                        <p>${p.desc.substring(0, 50)}...</p>
+                        <div class="price">${p.price} ج.م</div>
+                        <a href="product.html?id=${p.id}" class="btn">عرض التفاصيل</a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        renderFeatured();
+    </script>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>معرض الصور - موسى الأسود للأثاث</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .gallery-hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/gallery-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .gallery-filter {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .filter-button {
+            padding: 10px 25px;
+            border: 2px solid #C6A43F;
+            background: transparent;
+            color: #1E1E1E;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .filter-button:hover,
+        .filter-button.active {
+            background: #C6A43F;
+            color: white;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .gallery-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+        
+        .gallery-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .gallery-category {
+            font-size: 14px;
+            color: #C6A43F;
+        }
+        
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .lightbox.active {
+            display: flex;
+        }
+        
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        
+        .lightbox-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .lightbox-close:hover {
+            color: #C6A43F;
+        }
+        
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            padding: 20px;
+            transition: color 0.3s;
+        }
+        
+        .lightbox-nav:hover {
+            color: #C6A43F;
+        }
+        
+        .lightbox-nav.prev {
+            left: 20px;
+        }
+        
+        .lightbox-nav.next {
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="gallery-hero">
+        <div class="container">
+            <h1>معرض الصور</h1>
+            <p>مجموعة من أجمل تصاميمنا وأعمالنا</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- أزرار التصفية -->
+        <div class="gallery-filter">
+            <button class="filter-button active" onclick="filterGallery('all')">الكل</button>
+            <button class="filter-button" onclick="filterGallery('sofa')">كنب</button>
+            <button class="filter-button" onclick="filterGallery('curtain')">ستائر</button>
+            <button class="filter-button" onclick="filterGallery('bedroom')">غرف نوم</button>
+            <button class="filter-button" onclick="filterGallery('dining')">غرف سفرة</button>
+        </div>
+
+        <!-- شبكة الصور -->
+        <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <span class="lightbox-nav prev" onclick="navigateLightbox(-1)">&#10094;</span>
+        <span class="lightbox-nav next" onclick="navigateLightbox(1)">&#10095;</span>
+        <div class="lightbox-content" id="lightboxContent"></div>
+    </div>
+
+    <!-- شريط السلة العائم -->
+    <a href="cart.html" class="cart-bar">
+        🛒 السلة (<span class="cart-count">0</span>)
+    </a>
+
+    <div class="footer-line">
+        © 2025 MUSA AL-ASWAD FURNITURE – تصميم وبرمجة محمد علي
+    </div>
+
+    <script src="common.js"></script>
+    <script>
+        // بيانات معرض الصور
+        const galleryImages = [
+            { src: 'images/gallery/sofa1.jpg', title: 'كنبة مودرن', category: 'sofa' },
+            { src: 'images/gallery/sofa2.jpg', title: 'كنبة كلاسيك', category: 'sofa' },
+            { src: 'images/gallery/curtain1.jpg', title: 'ستائر مخملية', category: 'curtain' },
+            { src: 'images/gallery/curtain2.jpg', title: 'ستائر عازلة', category: 'curtain' },
+            { src: 'images/gallery/bedroom1.jpg', title: 'غرفة نوم مودرن', category: 'bedroom' },
+            { src: 'images/gallery/bedroom2.jpg', title: 'غرفة نوم كلاسيك', category: 'bedroom' },
+            { src: 'images/gallery/dining1.jpg', title: 'سفرة مودرن', category: 'dining' },
+            { src: 'images/gallery/dining2.jpg', title: 'سفرة كلاسيك', category: 'dining' },
+            { src: 'images/gallery/sofa3.jpg', title: 'كنبة جلد', category: 'sofa' },
+            { src: 'images/gallery/curtain3.jpg', title: 'ستائر حرير', category: 'curtain' },
+            { src: 'images/gallery/bedroom3.jpg', title: 'غرفة نوم عصرية', category: 'bedroom' },
+            { src: 'images/gallery/dining3.jpg', title: 'سفرة زجاج', category: 'dining' }
+        ];
+        
+        let currentImages = galleryImages;
+        let currentIndex = 0;
+
+        function renderGallery(images) {
+            const grid = document.getElementById('galleryGrid');
+            grid.innerHTML = '';
+            
+            images.forEach((img, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.innerHTML = `
+                    <img src="${img.src}" alt="${img.title}" onerror="this.src='images/placeholder.jpg'">
+                    <div class="gallery-overlay">
+                        <div class="gallery-title">${img.title}</div>
+                        <div class="gallery-category">${getCategoryName(img.category)}</div>
+                    </div>
+                `;
+                item.onclick = () => openLightbox(index);
+                grid.appendChild(item);
+            });
+        }
+
+        function getCategoryName(category) {
+            const categories = {
+                'sofa': 'كنب',
+                'curtain': 'ستائر',
+                'bedroom': 'غرف نوم',
+                'dining': 'غرف سفرة'
+            };
+            return categories[category] || category;
+        }
+
+        function filterGallery(category) {
+            // تحديث الأزرار
+            document.querySelectorAll('.filter-button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.includes(getCategoryName(category)) || (category === 'all' && btn.textContent.includes('الكل'))) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // تصفية الصور
+            if (category === 'all') {
+                currentImages = galleryImages;
+            } else {
+                currentImages = galleryImages.filter(img => img.category === category);
+            }
+            
+            renderGallery(currentImages);
+        }
+
+        // ========== Lightbox ==========
+        function openLightbox(index) {
+            currentIndex = index;
+            updateLightbox();
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox(e) {
+            if (!e || e.target.classList.contains('lightbox') || e.target.classList.contains('lightbox-close')) {
+                document.getElementById('lightbox').classList.remove('active');
+            }
+        }
+
+        function navigateLightbox(direction) {
+            currentIndex += direction;
+            if (currentIndex < 0) currentIndex = currentImages.length - 1;
+            if (currentIndex >= currentImages.length) currentIndex = 0;
+            updateLightbox();
+        }
+
+        function updateLightbox() {
+            const content = document.getElementById('lightboxContent');
+            content.innerHTML = `<img src="${currentImages[currentIndex].src}" alt="${currentImages[currentIndex].title}">`;
+        }
+
+        // التهيئة
+        renderGallery(galleryImages);
+    </script>
+</body>
+</html>

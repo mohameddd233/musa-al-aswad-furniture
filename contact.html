@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>اتصل بنا - موسى الأسود للأثاث</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .contact-hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/contact-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+        }
+        
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+            margin: 60px 0;
+        }
+        
+        .contact-info-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #F8F6F4;
+            border-radius: 15px;
+            transition: transform 0.3s;
+        }
+        
+        .info-item:hover {
+            transform: translateX(-5px);
+        }
+        
+        .info-icon {
+            width: 50px;
+            height: 50px;
+            background: #C6A43F;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .info-details h3 {
+            margin-bottom: 5px;
+            color: #1E1E1E;
+        }
+        
+        .info-details p, .info-details a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .info-details a:hover {
+            color: #C6A43F;
+        }
+        
+        .contact-form-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        
+        .form-title {
+            color: #C6A43F;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #C6A43F;
+            outline: none;
+        }
+        
+        .map-section {
+            margin: 60px 0;
+        }
+        
+        .map-container {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .working-hours {
+            margin-top: 30px;
+            padding: 20px;
+            background: #F8F6F4;
+            border-radius: 15px;
+        }
+        
+        .hours-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .hours-item:last-child {
+            border-bottom: none;
+        }
+        
+        .social-media {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .social-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: #1E1E1E;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .social-btn:hover {
+            background: #C6A43F;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="contact-hero">
+        <div class="container">
+            <h1>اتصل بنا</h1>
+            <p>نحن هنا للإجابة على استفساراتك على مدار الساعة</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="contact-container">
+            <!-- معلومات الاتصال -->
+            <div class="contact-info-card">
+                <h2 style="margin-bottom: 30px; color: #C6A43F;">معلومات الاتصال</h2>
+                
+                <div class="info-item">
+                    <div class="info-icon">📍</div>
+                    <div class="info-details">
+                        <h3>العنوان</h3>
+                        <p>شارع ١٥ من شارع ٤٥ يمين، العصافرة<br>أمام أبو حسن للمواد التموينية، الإسكندرية</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">📞</div>
+                    <div class="info-details">
+                        <h3>الهاتف</h3>
+                        <p><a href="tel:01276231298">012 7623 1298</a></p>
+                        <p style="font-size: 14px;">(متاح واتساب)</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">✉️</div>
+                    <div class="info-details">
+                        <h3>البريد الإلكتروني</h3>
+                        <p><a href="mailto:msamaan753@gmail.com">msamaan753@gmail.com</a></p>
+                    </div>
+                </div>
+                
+                <div class="working-hours">
+                    <h3 style="margin-bottom: 15px;">🕒 ساعات العمل</h3>
+                    <div class="hours-item">
+                        <span>السبت - الخميس:</span>
+                        <span>٩:٠٠ ص - ١٠:٠٠ م</span>
+                    </div>
+                    <div class="hours-item">
+                        <span>الجمعة:</span>
+                        <span>مغلقة</span>
+                    </div>
+                </div>
+                
+                <div class="social-media">
+                    <a href="https://www.facebook.com/share/1AgKJDZVhc/?mibextid=wwXIfr" target="_blank" class="social-btn">فيسبوك</a>
+                    <a href="https://www.instagram.com/musa_alaswad_furniture_?igsh=MTFrZGx3M3ZrcnBjbw==" target="_blank" class="social-btn">انستغرام</a>
+                </div>
+            </div>
+            
+            <!-- نموذج الاتصال -->
+            <div class="contact-form-card">
+                <h2 class="form-title">أرسل لنا رسالة</h2>
+                <form id="contactForm" onsubmit="sendMessage(event)">
+                    <div class="form-group">
+                        <label>الاسم الكامل</label>
+                        <input type="text" id="name" placeholder="أدخل اسمك" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>البريد الإلكتروني</label>
+                        <input type="email" id="email" placeholder="example@domain.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>رقم الهاتف</label>
+                        <input type="tel" id="phone" placeholder="01234567890" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>الرسالة</label>
+                        <textarea id="msg" rows="5" placeholder="اكتب رسالتك هنا..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn" style="width: 100%; padding: 15px; font-size: 16px;">
+                        إرسال الرسالة
+                    </button>
+                </form>
+                
+                <div style="margin-top: 20px; text-align: center;">
+                    <p style="color: #666;">أو تواصل مباشرة عبر</p>
+                    <a href="https://wa.me/201276231298" target="_blank" class="btn alt" style="display: inline-block; background: #25D366;">
+                        📱 واتساب
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- الخريطة -->
+        <div class="map-section">
+            <h2 style="text-align: center; margin-bottom: 30px;">موقعنا على الخريطة</h2>
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d109043.953693919!2d29.9596426!3d31.2155552!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f5c4a5b5b5b5b5%3A0x5b5b5b5b5b5b5b5b!2z2KfZhNir2YEg2YXYrdin2YbYjCDYp9mE2YXYp9mG2Iwg2KfZhNmF2KfZh9iMINin2YTYo9mF2YjZgiDYp9mE2YPZhtmI2YU!5e0!3m2!1sar!2seg!4v1620000000000!5m2!1sar!2seg" 
+                    width="100%" 
+                    height="400" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- شريط السلة العائم -->
+    <a href="cart.html" class="cart-bar">
+        🛒 السلة (<span class="cart-count">0</span>)
+    </a>
+
+    <div class="footer-line">
+        © 2025 MUSA AL-ASWAD FURNITURE – تصميم وبرمجة محمد علي
+    </div>
+
+    <script src="common.js"></script>
+    <script>
+        function sendMessage(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const msg = document.getElementById('msg').value;
+            
+            // إرسال عبر واتساب
+            const whatsappMsg = `*رسالة جديدة من موقع الأثاث*\n\n👤 *الاسم:* ${name}\n📧 *البريد:* ${email}\n📞 *الهاتف:* ${phone}\n💬 *الرسالة:* ${msg}`;
+            const url = `https://wa.me/201276231298?text=${encodeURIComponent(whatsappMsg)}`;
+            
+            showNotification('جاري إعادة التوجيه إلى واتساب...', 'success');
+            
+            setTimeout(() => {
+                window.open(url, '_blank');
+            }, 1500);
+            
+            // مسح النموذج
+            document.getElementById('contactForm').reset();
+        }
+    </script>
+</body>
+</html>
