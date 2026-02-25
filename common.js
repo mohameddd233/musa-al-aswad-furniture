@@ -179,7 +179,7 @@ function loadHeader() {
                             <li><a href="cart.html" class="${window.location.pathname.includes('cart') ? 'active' : ''}">
                                 🛒 السلة (<span class="cart-count">0</span>)
                             </a></li>
-                            <li><a href="admin.html" class="${window.location.pathname.includes('admin') ? 'active' : ''}">الإدارة</a></li>
+                            
                         </ul>
                     </nav>
                 </div>
