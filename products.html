@@ -551,45 +551,8 @@
         </div>
     </section>
 
-    <div class="container">
-        <!-- شريط الأدوات -->
-        <div class="store-toolbar">
-            <div class="search-wrapper">
-                <input type="text" id="searchInput" placeholder="ابحث عن كنبة، ستائر، كرسي..." onkeyup="debounceSearch()">
-                <span class="search-icon">🔍</span>
-            </div>
-            <div class="filter-wrapper">
-                <select class="filter-select" id="sortSelect" onchange="applyFilters()">
-                    <option value="default">ترتيب حسب</option>
-                    <option value="price-asc">السعر: من الأقل للأعلى</option>
-                    <option value="price-desc">السعر: من الأعلى للأقل</option>
-                    <option value="name-asc">الاسم: أ - ي</option>
-                    <option value="name-desc">الاسم: ي - أ</option>
-                    <option value="newest">الأحدث</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- أزرار الفئات -->
-        <div class="categories-bar">
-            <button class="category-btn active" onclick="filterByCategory('all')">الكل</button>
-            <button class="category-btn" onclick="filterByCategory('sofa')">🛋️ كنب</button>
-            <button class="category-btn" onclick="filterByCategory('curtain')">🪟 ستائر</button>
-            <button class="category-btn" onclick="filterByCategory('chair')">🪑 كراسي</button>
-            <button class="category-btn" onclick="filterByCategory('table')">🪵 طاولات</button>
-            <button class="category-btn" onclick="filterByCategory('bedroom')">🛏️ غرف نوم</button>
-        </div>
-
-        <!-- معلومات النتائج -->
-        <div class="results-info">
-            <div class="results-count" id="resultsCount">
-                عرض <span id="displayedCount">0</span> من أصل <span id="totalCount">0</span> منتج
-            </div>
-            <div class="view-options">
-                <button class="view-btn active" onclick="changeView('grid')" title="عرض شبكي">🔲</button>
-                <button class="view-btn" onclick="changeView('list')" title="عرض قائمة">📋</button>
-            </div>
-        </div>
+ 
+    
 
         <!-- شبكة المنتجات -->
         <div id="loadingSpinner" class="loading-spinner" style="display: none;">
