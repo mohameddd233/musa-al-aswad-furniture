@@ -647,380 +647,415 @@
     <div class="footer-line">
         © 2025 MUSA AL-ASWAD FURNITURE – Programming and design by MOHAMED ALI
     </div>
+<script src="common.js"></script>
 
-    <script src="common.js"></script>
-    <script>
-        // ========== إعدادات الأدمن ==========
-        const ADMIN_PASSWORD = '12345';
-        let deleteId = null;
-        
-        // مصفوفة لتخزين الصور المرفوعة
-        let uploadedImages = [];
-        
-        // ========== دوال localStorage الأساسية ==========
-        // دالة جلب المنتجات من localStorage
-        function getProducts() {
-            const products = localStorage.getItem('musa_products');
-            if (products) {
-                return JSON.parse(products);
-            }
-            
-            // إذا مفيش منتجات، نرجع مصفوفة فاضية
-            return [];
-        }
+<script>
 
-        // دالة حفظ المنتجات في localStorage
-        function saveProducts(products) {
-            localStorage.setItem('musa_products', JSON.stringify(products));
-        }
-        
-        // ========== تسجيل الدخول ==========
-        function showLogin() { 
-            document.getElementById('loginScreen').style.display = 'block'; 
-            document.getElementById('dashboard').style.display = 'none'; 
-        }
-        
-        function showDashboard() { 
-            document.getElementById('loginScreen').style.display = 'none'; 
-            document.getElementById('dashboard').style.display = 'block'; 
-            updateStats();
-            renderList();
-            
-            // تحميل الصور المخزنة
-            loadUploadedImages();
-        }
+// ================= إعدادات الأدمن =================
+const ADMIN_PASSWORD = "12345";
+let deleteId = null;
+let uploadedImages = [];
 
-        function login() {
-            const password = document.getElementById('loginPw').value;
-            if (!password) {
-                showNotification('أدخل كلمة المرور', 'warning');
-                return;
-            }
-            if (password === ADMIN_PASSWORD) { 
-                sessionStorage.setItem('musa_is_admin', '1'); 
-                showDashboard(); 
-            } else { 
-                showNotification('كلمة المرور خطأ', 'error');
-            }
-        }
+// ================= تسجيل الدخول =================
+function showLogin(){
+document.getElementById("loginScreen").style.display="block";
+document.getElementById("dashboard").style.display="none";
+}
 
-        function logout() { 
-            sessionStorage.removeItem('musa_is_admin'); 
-            showLogin(); 
-        }
+function showDashboard(){
+document.getElementById("loginScreen").style.display="none";
+document.getElementById("dashboard").style.display="block";
 
-        // ========== إحصائيات سريعة ==========
-        function updateStats() {
-            const products = getProducts();
-            const totalProducts = products.length;
-            const totalStock = products.reduce((sum, p) => sum + p.qty, 0);
-            const totalValue = products.reduce((sum, p) => sum + (p.price * p.qty), 0);
-            const lowStock = products.filter(p => p.qty < 5).length;
-            
-            const statsHtml = `
-                <div class="stat-card">
-                    <div class="stat-label">📦 إجمالي المنتجات</div>
-                    <div class="stat-number">${totalProducts}</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">📊 قطع متوفرة</div>
-                    <div class="stat-number">${totalStock}</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">💰 قيمة المخزون</div>
-                    <div class="stat-number">${totalValue.toLocaleString()} ج.م</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">⚠️ مخزون منخفض</div>
-                    <div class="stat-number" style="color: ${lowStock > 0 ? '#f44336' : '#4CAF50'}">${lowStock}</div>
-                </div>
-            `;
-            
-            document.getElementById('adminStats').innerHTML = statsHtml;
-            document.getElementById('productsCount').textContent = products.length;
-        }
+updateStats();
+renderList();
+loadUploadedImages();
+}
 
-        // ========== عرض المنتجات ==========
-        function renderList(filterText = '') {
-            const prods = getProducts();
-            const container = document.getElementById('product-list');
-            
-            let filtered = prods;
-            if (filterText) {
-                filtered = prods.filter(p => 
-                    p.title.toLowerCase().includes(filterText.toLowerCase()) ||
-                    p.desc.toLowerCase().includes(filterText.toLowerCase())
-                );
-            }
-            
-            if (filtered.length === 0) {
-                container.innerHTML = '<div class="no-products">🚫 لا توجد منتجات تطابق البحث</div>';
-                return;
-            }
-            
-            container.innerHTML = '';
-            filtered.forEach(p => {
-                let stockClass = '';
-                if (p.qty < 3) stockClass = 'low';
-                else if (p.qty < 8) stockClass = 'medium';
-                
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `
-                    <div class="image-container">
-                        <img src="${p.img}" alt="${p.title}" onerror="this.src='images/placeholder.jpg'">
-                        <span class="stock-badge ${stockClass}">${p.qty}</span>
-                    </div>
-                    <div class="info">
-                        <h4 title="${p.title}">${p.title.length > 20 ? p.title.substring(0, 18) + '...' : p.title}</h4>
-                        <div class="price">${p.price} ج.م</div>
-                        <div class="desc" title="${p.desc}">${p.desc.substring(0, 40)}...</div>
-                        <div class="actions">
-                            <button class="btn" onclick="edit(${p.id})" title="تعديل المنتج">✏️ تعديل</button>
-                            <button class="btn alt" onclick="showDeleteModal(${p.id})" title="حذف المنتج">🗑️ حذف</button>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
+function login(){
 
-        // ========== البحث ==========
-        function filterProducts() {
-            const searchText = document.getElementById('searchProducts').value;
-            renderList(searchText);
-        }
+const password=document.getElementById("loginPw").value;
 
-        // ========== نظام رفع الصور ==========
-        function loadUploadedImages() {
-            // محاولة تحميل الصور من localStorage
-            const saved = localStorage.getItem('musa_uploaded_images');
-            if (saved) {
-                uploadedImages = JSON.parse(saved);
-                renderImageGallery();
-            }
-        }
-        
-        function saveUploadedImages() {
-            localStorage.setItem('musa_uploaded_images', JSON.stringify(uploadedImages));
-        }
-        
-        function handleImageUpload(event) {
-            const files = event.target.files;
-            const errorDiv = document.getElementById('imageError');
-            
-            if (files.length === 0) return;
-            
-            // التحقق من حجم الصور (حد أقصى 2 ميجا)
-            for (let file of files) {
-                if (file.size > 2 * 1024 * 1024) {
-                    errorDiv.style.display = 'block';
-                    errorDiv.textContent = '⚠️ الصورة كبيرة جداً. الحد الأقصى 2 ميجابايت';
-                    return;
-                }
-            }
-            
-            errorDiv.style.display = 'none';
-            
-            // معالجة كل صورة
-            for (let file of files) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    const imageData = {
-                        id: Date.now() + Math.random(),
-                        name: file.name,
-                        data: e.target.result,
-                        date: new Date().toLocaleString()
-                    };
-                    
-                    uploadedImages.push(imageData);
-                    renderImageGallery();
-                    saveUploadedImages();
-                    
-                    // اختيار الصورة الأولى تلقائياً
-                    if (uploadedImages.length === 1) {
-                        selectImage(imageData);
-                    }
-                };
-                
-                reader.readAsDataURL(file);
-            }
-            
-            // مسح قيمة input لنفس الملف
-            event.target.value = '';
-        }
-        
-        function renderImageGallery() {
-            const gallery = document.getElementById('imageGallery');
-            
-            if (uploadedImages.length === 0) {
-                gallery.innerHTML = '';
-                return;
-            }
-            
-            gallery.innerHTML = '';
-            uploadedImages.forEach(img => {
-                const item = document.createElement('div');
-                item.className = 'preview-item';
-                item.onclick = () => selectImage(img);
-                item.innerHTML = `
-                    <img src="${img.data}" alt="${img.name}">
-                    <span class="remove-btn" onclick="event.stopPropagation(); removeImage('${img.id}')">×</span>
-                `;
-                gallery.appendChild(item);
-            });
-        }
-        
-        function selectImage(image) {
-            // تحديث الحقول
-            document.getElementById('img').value = image.data;
-            
-            // تحديث المعاينة
-            const preview = document.getElementById('img-preview');
-            const placeholder = document.getElementById('previewPlaceholder');
-            preview.src = image.data;
-            preview.style.display = 'block';
-            placeholder.style.display = 'none';
-            
-            // تحديث عرض الصورة المختارة
-            const selectedDisplay = document.getElementById('selectedImageDisplay');
-            document.getElementById('selectedImage').src = image.data;
-            document.getElementById('selectedImageName').textContent = image.name.length > 20 ? image.name.substring(0, 18) + '...' : image.name;
-            document.getElementById('selectedImagePath').textContent = 'صورة من المعرض';
-            selectedDisplay.style.display = 'flex';
-            
-            // إزالة علامة التحديد من كل الصور
-            document.querySelectorAll('.preview-item').forEach(item => {
-                item.classList.remove('selected');
-            });
-            
-            // إضافة علامة للصورة المختارة
-            event.currentTarget.classList.add('selected');
-            
-            showNotification('✅ تم اختيار الصورة', 'success');
-        }
-        
-        function removeImage(imageId) {
-            if (confirm('هل تريد حذف هذه الصورة من المعرض؟')) {
-                uploadedImages = uploadedImages.filter(img => img.id != imageId);
-                renderImageGallery();
-                saveUploadedImages();
-                
-                // إذا كانت الصورة المحذوفة هي المختارة حالياً
-                const currentImg = document.getElementById('img').value;
-                if (currentImg && !uploadedImages.some(img => img.data === currentImg)) {
-                    clearSelectedImage();
-                }
-                
-                showNotification('🗑️ تم حذف الصورة', 'info');
-            }
-        }
-        
-        function clearSelectedImage() {
-            document.getElementById('img').value = '';
-            document.getElementById('img-preview').style.display = 'none';
-            document.getElementById('previewPlaceholder').style.display = 'flex';
-            document.getElementById('selectedImageDisplay').style.display = 'none';
-            
-            // إزالة علامة التحديد من كل الصور
-            document.querySelectorAll('.preview-item').forEach(item => {
-                item.classList.remove('selected');
-            });
-        }
+if(!password){
+showNotification("أدخل كلمة المرور","warning");
+return;
+}
 
-        // ========== إدارة النموذج ==========
-        function clearForm() {
-            document.getElementById('prodForm').reset();
-            document.getElementById('pid').value = '';
-            document.getElementById('formTitle').innerHTML = '<span>➕ إضافة منتج جديد</span>';
-            
-            // مسح الصورة المحددة
-            clearSelectedImage();
-        }
+if(password===ADMIN_PASSWORD){
 
-        function saveProduct(e) {
-            e.preventDefault();
-            
-            // التحقق من وجود صورة
-            if (!document.getElementById('img').value) {
-                showNotification('❌ يجب اختيار صورة للمنتج', 'error');
-                return;
-            }
-            
-            const id = document.getElementById('pid').value ? parseInt(document.getElementById('pid').value) : Date.now();
-            const prod = {
-                id: id,
-                title: document.getElementById('title').value,
-                price: parseFloat(document.getElementById('price').value),
-                img: document.getElementById('img').value,
-                qty: parseInt(document.getElementById('qty').value),
-                desc: document.getElementById('desc').value
-            };
-            
-            let arr = getProducts().filter(x => x.id !== prod.id);
-            arr.unshift(prod);
-            saveProducts(arr);
-            
-            clearForm();
-            updateStats();
-            renderList();
-            showNotification('✅ تم حفظ المنتج بنجاح', 'success');
-        }
+sessionStorage.setItem("musa_is_admin","1");
+showDashboard();
 
-        // ========== التعديل والحذف ==========
-        function edit(id) {
-            const p = getProducts().find(x => x.id === id);
-            document.getElementById('pid').value = p.id;
-            document.getElementById('title').value = p.title;
-            document.getElementById('price').value = p.price;
-            document.getElementById('img').value = p.img;
-            document.getElementById('qty').value = p.qty;
-            document.getElementById('desc').value = p.desc;
-            
-            // عرض الصورة في المعاينة
-            const preview = document.getElementById('img-preview');
-            const placeholder = document.getElementById('previewPlaceholder');
-            preview.src = p.img;
-            preview.style.display = 'block';
-            placeholder.style.display = 'none';
-            
-            // إخفاء عرض الصورة المختارة (لأنها من قاعدة البيانات)
-            document.getElementById('selectedImageDisplay').style.display = 'none';
-            
-            document.getElementById('formTitle').innerHTML = '<span>✏️ تعديل المنتج</span>';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+}else{
 
-        function showDeleteModal(id) {
-            deleteId = id;
-            document.getElementById('deleteModal').style.display = 'flex';
-        }
+showNotification("كلمة المرور خطأ","error");
 
-        function closeDeleteModal() {
-            deleteId = null;
-            document.getElementById('deleteModal').style.display = 'none';
-        }
+}
 
-        function confirmDelete() {
-            if (deleteId) {
-                const arr = getProducts().filter(x => x.id !== deleteId);
-                saveProducts(arr);
-                updateStats();
-                renderList();
-                showNotification('🗑️ تم حذف المنتج', 'info');
-                closeDeleteModal();
-            }
-        }
+}
 
-        // ========== التهيئة ==========
-        document.addEventListener('DOMContentLoaded', function() {
-            if (sessionStorage.getItem('musa_is_admin') === '1') {
-                showDashboard();
-            } else {
-                showLogin();
-            }
-        });
-    </script>
+function logout(){
+
+sessionStorage.removeItem("musa_is_admin");
+showLogin();
+
+}
+
+// ================= الإحصائيات =================
+async function updateStats(){
+
+const products = await getProducts();
+
+const totalProducts = products.length;
+
+const totalStock = products.reduce((s,p)=>s+p.qty,0);
+
+const totalValue = products.reduce((s,p)=>s+(p.price*p.qty),0);
+
+const lowStock = products.filter(p=>p.qty<5).length;
+
+document.getElementById("adminStats").innerHTML = `
+
+<div class="stat-card">
+<div class="stat-label">📦 المنتجات</div>
+<div class="stat-number">${totalProducts}</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-label">📊 المخزون</div>
+<div class="stat-number">${totalStock}</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-label">💰 القيمة</div>
+<div class="stat-number">${totalValue.toLocaleString()}</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-label">⚠️ مخزون قليل</div>
+<div class="stat-number">${lowStock}</div>
+</div>
+
+`;
+
+document.getElementById("productsCount").textContent=totalProducts;
+
+}
+
+// ================= عرض المنتجات =================
+async function renderList(filter=""){
+
+const products = await getProducts();
+
+const container=document.getElementById("product-list");
+
+let filtered = products;
+
+if(filter){
+
+filtered = products.filter(p =>
+p.title.toLowerCase().includes(filter.toLowerCase()) ||
+p.desc.toLowerCase().includes(filter.toLowerCase())
+);
+
+}
+
+if(filtered.length===0){
+
+container.innerHTML=`<div class="no-products">لا يوجد منتجات</div>`;
+return;
+
+}
+
+container.innerHTML="";
+
+filtered.forEach(p=>{
+
+let stockClass="";
+
+if(p.qty<3) stockClass="low";
+else if(p.qty<8) stockClass="medium";
+
+const desc = p.desc.length>40 ? p.desc.substring(0,40)+"..." : p.desc;
+
+const card=document.createElement("div");
+
+card.className="product-card";
+
+card.innerHTML=`
+
+<div class="image-container">
+<img src="${p.img}">
+<span class="stock-badge ${stockClass}">${p.qty}</span>
+</div>
+
+<div class="info">
+
+<h4>${p.title}</h4>
+
+<div class="price">${p.price} ج.م</div>
+
+<div class="desc">${desc}</div>
+
+<div class="actions">
+
+<button class="btn" onclick="edit(${p.id})">✏️ تعديل</button>
+
+<button class="btn alt" onclick="showDeleteModal(${p.id})">🗑️ حذف</button>
+
+</div>
+
+</div>
+
+`;
+
+container.appendChild(card);
+
+});
+
+}
+
+// ================= البحث =================
+function filterProducts(){
+
+const text=document.getElementById("searchProducts").value;
+
+renderList(text);
+
+}
+
+// ================= رفع الصور =================
+function loadUploadedImages(){
+
+const saved = localStorage.getItem("musa_uploaded_images");
+
+if(saved){
+
+uploadedImages = JSON.parse(saved);
+
+renderImageGallery();
+
+}
+
+}
+
+function saveUploadedImages(){
+
+localStorage.setItem("musa_uploaded_images",JSON.stringify(uploadedImages));
+
+}
+
+function handleImageUpload(event){
+
+const files = event.target.files;
+
+for(let file of files){
+
+const reader=new FileReader();
+
+reader.onload=function(e){
+
+const img={
+
+id:Date.now()+Math.random(),
+name:file.name,
+data:e.target.result
+
+};
+
+uploadedImages.push(img);
+
+renderImageGallery();
+saveUploadedImages();
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+event.target.value="";
+
+}
+
+function renderImageGallery(){
+
+const gallery=document.getElementById("imageGallery");
+
+gallery.innerHTML="";
+
+uploadedImages.forEach(img=>{
+
+const item=document.createElement("div");
+
+item.className="preview-item";
+
+item.onclick=(e)=>selectImage(img,e.currentTarget);
+
+item.innerHTML=`
+
+<img src="${img.data}">
+<span class="remove-btn"
+onclick="event.stopPropagation();removeImage('${img.id}')">×</span>
+
+`;
+
+gallery.appendChild(item);
+
+});
+
+}
+
+function selectImage(image,element){
+
+document.getElementById("img").value=image.data;
+
+document.querySelectorAll(".preview-item").forEach(i=>i.classList.remove("selected"));
+
+element.classList.add("selected");
+
+const preview=document.getElementById("img-preview");
+
+preview.src=image.data;
+
+preview.style.display="block";
+
+document.getElementById("previewPlaceholder").style.display="none";
+
+}
+
+function removeImage(id){
+
+uploadedImages=uploadedImages.filter(i=>i.id!=id);
+
+renderImageGallery();
+
+saveUploadedImages();
+
+}
+
+// ================= إدارة النموذج =================
+function clearForm(){
+
+document.getElementById("prodForm").reset();
+
+document.getElementById("pid").value="";
+
+document.getElementById("img-preview").style.display="none";
+
+document.getElementById("previewPlaceholder").style.display="flex";
+
+}
+
+// ================= حفظ المنتج =================
+async function saveProduct(e){
+
+e.preventDefault();
+
+const products = await getProducts();
+
+const id=document.getElementById("pid").value || Date.now();
+
+const prod={
+
+id:Number(id),
+title:document.getElementById("title").value,
+price:Number(document.getElementById("price").value),
+img:document.getElementById("img").value,
+qty:Number(document.getElementById("qty").value),
+desc:document.getElementById("desc").value
+
+};
+
+let arr = products.filter(p=>p.id!=prod.id);
+
+arr.unshift(prod);
+
+await saveProducts(arr);
+
+clearForm();
+
+updateStats();
+
+renderList();
+
+showNotification("تم حفظ المنتج","success");
+
+}
+
+// ================= تعديل =================
+async function edit(id){
+
+const products = await getProducts();
+
+const p = products.find(x=>x.id===id);
+
+document.getElementById("pid").value=p.id;
+document.getElementById("title").value=p.title;
+document.getElementById("price").value=p.price;
+document.getElementById("img").value=p.img;
+document.getElementById("qty").value=p.qty;
+document.getElementById("desc").value=p.desc;
+
+const preview=document.getElementById("img-preview");
+
+preview.src=p.img;
+
+preview.style.display="block";
+
+document.getElementById("previewPlaceholder").style.display="none";
+
+window.scrollTo({top:0,behavior:"smooth"});
+
+}
+
+// ================= حذف =================
+function showDeleteModal(id){
+
+deleteId=id;
+
+document.getElementById("deleteModal").style.display="flex";
+
+}
+
+function closeDeleteModal(){
+
+deleteId=null;
+
+document.getElementById("deleteModal").style.display="none";
+
+}
+
+async function confirmDelete(){
+
+if(!deleteId) return;
+
+const products = await getProducts();
+
+const arr = products.filter(p=>p.id!==deleteId);
+
+await saveProducts(arr);
+
+updateStats();
+
+renderList();
+
+closeDeleteModal();
+
+showNotification("تم الحذف","info");
+
+}
+
+// ================= بدء الصفحة =================
+document.addEventListener("DOMContentLoaded",()=>{
+
+if(sessionStorage.getItem("musa_is_admin")=="1"){
+showDashboard();
+}else{
+showLogin();
+}
+
+});
+
+</script>
 </body>
 </html>
